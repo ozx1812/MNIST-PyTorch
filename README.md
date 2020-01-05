@@ -31,3 +31,9 @@ The steps for training/learning from a batch of data are described in the commen
     5.Perform a single optimization step (parameter update)
     6.Update average training loss
 
+step 4: Test the Trained Network
+
+  Finally, we test our best model on previously unseen test data and evaluate it's performance. Testing on unseen data is a good way to check that our model generalizes well. It may also be useful to be granular in this analysis and take a look at how this model performs on each class as well as looking at its overall loss and accuracy.
+
+
+  model.eval() will set all the layers in your model to evaluation mode. This affects layers like dropout layers that turn "off" nodes during training with some probability, but should allow every node to be "on" for evaluation!
