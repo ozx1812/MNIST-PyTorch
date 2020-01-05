@@ -129,4 +129,51 @@ criterion = nn.CrossEntropyLoss()
 # specify optimizer
 optimizer = optim.SGD(model.parameters(), lr=0.001)
 
+"""
+Train the Network
 
+The steps for training/learning from a batch of data are described below:
+
+    1.Clear the gradients of all optimized variables
+    2.Forward pass: compute predicted outputs by passing inputs to the model
+    3.Calculate the loss
+    4.Backward pass: compute gradient of the loss with respect to model parameters
+    5.Perform a single optimization step (parameter update)
+    6.Update average training loss
+
+The following loop trains for 30 epochs; feel free to change this number. 
+For now, we suggest somewhere between 20-50 epochs. As you train, 
+take a look at how the values for the training loss decrease over time.
+We want it to decrease while also avoiding overfitting the training data. 
+"""
+
+
+# number of epochs to train the model
+n_epochs = 30  # suggest training between 20-50 epochs
+
+for epoch in range(n_epochs):
+    # monitor training loss
+    train_loss = 0.0
+    
+    ###################
+    # train the model #
+    ###################
+    for data, target in train_loader:
+        # clear the gradients of all optimized variables
+        optimizer.zero_grad()
+        # forward pass: compute predicted outputs by passing inputs to the model
+        output = model(data)
+        # calculate the loss
+        loss = criterion(output, target)
+        # backward pass: compute gradient of the loss with respect to model parameters
+        loss.backward()
+        # perform a single optimization step (parameter update)
+        optimizer.step()
+        # update running training loss
+        train_loss += loss.item()*data.size(0)
+        
+    # print training statistics 
+    # calculate average loss over an epoch
+    train_loss = train_loss/len(train_loader.sampler)
+
+    print('Epoch: {} \tTraining Loss: {:.6f}'.format(epoch+1, train_loss))
