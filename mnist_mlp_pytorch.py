@@ -78,6 +78,55 @@ for x in range(width):
                     horizontalalignment='center',
                     verticalalignment='center',
                     color='white' if img[x][y]<thresh else 'black')
+"""
+Define the Network Architecture
 
-   
+The architecture will be responsible for seeing as input a 784-dim Tensor of pixel values for each image,
+and producing a Tensor of length 10 (our number of classes) that indicates the class scores for an input image.
+This particular example uses two hidden layers and dropout to avoid overfitting.
+"""
     
+import torch.nn as nn
+import torch.nn.functional as F
+
+
+class Net(nn.Module):
+    def __init__(self):
+        super(Net, self).__init__()
+        # linear layer (784 -> 1 hidden node)
+        h1,h2 = 512,512
+        self.fc1 = nn.Linear(28 * 28, h1)
+        self.fc2 = nn.Linear(h1,h2)
+        self.fc3 = nn.Linear(h2,10)
+        self.dropout = nn.Dropout(0.2)
+
+    def forward(self, x):
+        # flatten image input
+        x = x.view(-1, 28 * 28)
+        # add hidden layer, with relu activation function
+        x = self.dropout(F.relu(self.fc1(x)))
+        x = self.dropout(F.relu(self.fc2(x)))
+        x = self.fc3(x)
+        return x
+
+# initialize the NN
+model = Net()
+print(model)
+
+
+"""
+Specify Loss Function and Optimizer
+
+we use cross-entropy loss for classification. 
+you can see that PyTorch's cross entropy function applies a softmax funtion 
+to the output layer and then calculates the log loss.
+
+
+"""
+# specify loss function
+criterion = nn.CrossEntropyLoss()
+
+# specify optimizer
+optimizer = optim.SGD(model.parameters(), lr=0.001)
+
+
